@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>githup-api-autocomplete</title>
+</head>
+<body>
+    <main class="main">
+        <div class="main__card">
+           <div class="main__card-repository-search">
+                <div class="main__card-repository-search-box">
+                    <input id='input-box' type="text">
+                </div>
+                <div class="main__card-repository-search-results">
+                    <ul>
+                        
+                    </ul>
+                </div>
+           </div>
+           <div class="main__card-repository-list">
+              <ul>
+                 
+              </ul>
+           </div>
+        </div>
+    </main>
+    <template class="repo-template">
+        <div class="repository" data-id="">
+            <div class="repository__info">
+                <div class="repository__info-name">
+                    <h4>Name: </h4>
+                    <p data-name="name"></p>
+                </div>
+                <div class="repository__info-owner">
+                    <h4>Owner: </h4>
+                    <p data-name="owner"></p>
+                </div>
+                <div class="repository__info-stars">
+                    <h4>Stars: </h4>
+                    <p data-name="stars"></p>
+                </div>
+            </div>
+            <button class="repository__delete-btn" type="button">
+                <img src="./src/delete_btn.svg" alt="cancel" width="40" height="40">
+            </button>
+        </div>
+    </template>
+    <script type="module" src="./script.js"></script>
+</body>
+</html>

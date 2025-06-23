@@ -1,7 +1,7 @@
 import { Octokit } from "https://esm.sh/octokit"
 
 
-const octokit = new Octokit()
+const octokit = new Octokit({})
 
 const inputBox = document.getElementById('input-box');
 const repositoryTemplate = document.querySelector('.repo-template').content.querySelector('div');
@@ -38,18 +38,8 @@ function renderResults() {
         Array.from(searchSuggestionsResult.children).forEach(suggestion => suggestion.remove());
       }
       if(inputBox.value) {
-        let filteredResult = [];
-        let count = 0;
-        for(let repo of result.data.items) {
-          if(repo.name.includes(inputBox.value)) {
-            filteredResult.push(repo)
-            count++
-          }
+        let filteredResult = result.data.items.slice(0, 5);
 
-          if(count === 5) {
-            break;
-          }
-        }
         const listItems = filteredResult.map(repo => createSuggestion(repo));
         listItems.forEach(listItem => searchSuggestionsResult.append(listItem));
       }
@@ -64,7 +54,7 @@ function createSuggestion(repository) {
   suggestionText.textContent = repository.name;
   suggestion.addEventListener('click', () => {
     createRepoFunction.call(null, repository);
-    console.log(searchSuggestionsResult.children);
+    inputBox.value = "";
     Array.from(searchSuggestionsResult.children).forEach(suggestion => suggestion.remove());
   });
   suggestion.append(suggestionText);
@@ -125,5 +115,5 @@ function createRepo() {
 }
 }
 
-const renderDebounce = debounce(renderResults, 100)
+const renderDebounce = debounce(renderResults, 200);
 inputBox.addEventListener('keyup', renderDebounce);

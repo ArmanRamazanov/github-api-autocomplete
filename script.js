@@ -1,7 +1,7 @@
 import { Octokit } from "https://esm.sh/octokit"
 
 
-const octokit = new Octokit({})
+const octokit = new Octokit({});
 
 const inputBox = document.getElementById('input-box');
 const repositoryTemplate = document.querySelector('.repo-template').content.querySelector('div');
@@ -11,12 +11,12 @@ const searchSuggestionsResult = document.querySelector('.main__card-repository-s
 function debounce(fn, debounceTime) {
   let setTimeoutId;
   return function(...args) {
-    if(setTimeout) clearTimeout(setTimeoutId);
+    if(setTimeoutId) clearTimeout(setTimeoutId);
     setTimeoutId = setTimeout(() => fn.apply(this, args), debounceTime);
   }
 }
 
-async function getResponse() {
+async function renderResults() {
   if(inputBox.value) {
     const inputBoxValue = inputBox.value;
     const q = encodeURIComponent(inputBoxValue) + ' in:name';
@@ -25,25 +25,16 @@ async function getResponse() {
         'Accept' : 'application/vnd.github.json',
         'X-GitHub-Api-Version': '2022-11-28'
       },
-      q
+      q,
     })
-    return result;
+  
+    if(searchSuggestionsResult.children.length) {
+      Array.from(searchSuggestionsResult.children).forEach(suggestion => suggestion.remove());
+    }
+    let filteredResult = result.data.items.slice(0, 5);
+    const listItems = filteredResult.map(repo => createSuggestion(repo));
+    listItems.forEach(listItem => searchSuggestionsResult.append(listItem));
   }
-}
-
-function renderResults() {
-  getResponse().then(
-    result => {
-      if(searchSuggestionsResult.children.length) {
-        Array.from(searchSuggestionsResult.children).forEach(suggestion => suggestion.remove());
-      }
-      if(inputBox.value) {
-        let filteredResult = result.data.items.slice(0, 5);
-
-        const listItems = filteredResult.map(repo => createSuggestion(repo));
-        listItems.forEach(listItem => searchSuggestionsResult.append(listItem));
-      }
-  })
 }
 
 const createRepoFunction = createRepo();
@@ -115,5 +106,5 @@ function createRepo() {
 }
 }
 
-const renderDebounce = debounce(renderResults, 200);
-inputBox.addEventListener('keyup', renderDebounce);
+const renderDebounce = debounce(renderResults, 600);
+inputBox.addEventListener('input', renderDebounce);
